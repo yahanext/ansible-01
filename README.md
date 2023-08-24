@@ -3,13 +3,58 @@
 ## Подготовка к выполнению
 
 1. Установите Ansible версии 2.10 или выше.
+```
+yaha@yahawork:~/netology/ansible-01$ ansible --version
+ansible 2.10.8
+  config file = None
+  configured module search path = ['/home/yaha/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3/dist-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 3.10.12 (main, Jun 11 2023, 05:26:28) [GCC 11.4.0]
+yaha@yahawork:~/netology/ansible-01$ 
+
+```
 2. Создайте свой публичный репозиторий на GitHub с произвольным именем.
 3. Скачайте [Playbook](./playbook/) из репозитория с домашним заданием и перенесите его в свой репозиторий.
 
 ## Основная часть
 
 1. Попробуйте запустить playbook на окружении из `test.yml`, зафиксируйте значение, которое имеет факт `some_fact` для указанного хоста при выполнении playbook.
+```
+yaha@yahawork:~/netology/ansible-01/playbook$ ansible-playbook site.yml -i inventory/test.yml
+
+PLAY [Print os facts] ******************************************************************************************
+
+TASK [Gathering Facts] *****************************************************************************************
+[WARNING]: Platform linux on host localhost is using the discovered Python interpreter at /usr/bin/python, but
+future installation of another Python interpreter could change the meaning of that path. See
+https://docs.ansible.com/ansible/2.10/reference_appendices/interpreter_discovery.html for more information.
+ok: [localhost]
+
+TASK [Print OS] ************************************************************************************************
+ok: [localhost] => {
+    "msg": "Linux Mint"
+}
+
+TASK [Print fact] **********************************************************************************************
+ok: [localhost] => {
+    "msg": 12
+}
+
+PLAY RECAP *****************************************************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+yaha@yahawork:~/netology/ansible-01/playbook$ 
+
+```
 2. Найдите файл с переменными (group_vars), в котором задаётся найденное в первом пункте значение, и поменяйте его на `all default fact`.
+```
+yaha@yahawork:~/netology/ansible-01/playbook$ cat group_vars/all/examp.yml
+---
+  some_fact: "all default fact"
+  yaha@yahawork:~/netology/ansible-01/playbook$ 
+
+```
 3. Воспользуйтесь подготовленным (используется `docker`) или создайте собственное окружение для проведения дальнейших испытаний.
 4. Проведите запуск playbook на окружении из `prod.yml`. Зафиксируйте полученные значения `some_fact` для каждого из `managed host`.
 5. Добавьте факты в `group_vars` каждой из групп хостов так, чтобы для `some_fact` получились значения: для `deb` — `deb default fact`, для `el` — `el default fact`.
